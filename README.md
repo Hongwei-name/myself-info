@@ -81,8 +81,74 @@
    - 导入数据库结构（如果需要）
 
 3. **启动后端服务**
-   - 使用Apache或Nginx服务器部署后端
-   - 确保后端API可以通过 `http://localhost/backend/api.php` 访问
+   
+   ### 对于新手小白的详细部署步骤：
+   
+   #### 使用XAMPP（推荐，适合新手）
+   1. **下载并安装XAMPP**
+      - 访问 [XAMPP官网](https://www.apachefriends.org/index.html) 下载适合你系统的版本
+      - 按照安装向导完成安装（默认安装即可）
+   
+   2. **配置项目**
+      - 打开XAMPP安装目录（默认是 `C:\xampp`）
+      - 找到 `htdocs` 文件夹
+      - 将整个项目文件夹复制到 `htdocs` 目录中
+      - 确保项目路径为：`C:\xampp\htdocs\myself`
+   
+   3. **启动服务**
+      - 打开XAMPP控制面板
+      - 点击 "Start" 按钮启动 "Apache" 和 "MySQL" 服务
+      - 确保两个服务都显示为绿色状态
+   
+   4. **访问项目**
+      - 打开浏览器，输入 `http://localhost/myself/backend/api.php`
+      - 如果看到API响应（可能是一个错误消息，因为数据库还未配置），说明后端服务已成功部署
+   
+   #### 使用独立的Apache或Nginx服务器
+   1. **安装服务器软件**
+      - **Apache**：可以通过 [Apache官网](https://httpd.apache.org/download.cgi) 下载并安装
+      - **Nginx**：可以通过 [Nginx官网](https://nginx.org/en/download.html) 下载并安装
+   
+   2. **配置虚拟主机**
+      - **Apache**：编辑 `httpd-vhosts.conf` 文件，添加以下配置：
+        ```
+        <VirtualHost *:80>
+            ServerName localhost
+            DocumentRoot "C:/path/to/your/project/myself"
+            <Directory "C:/path/to/your/project/myself">
+                AllowOverride All
+                Require all granted
+            </Directory>
+        </VirtualHost>
+        ```
+      
+      - **Nginx**：编辑 `nginx.conf` 文件，添加以下配置：
+        ```
+        server {
+            listen 80;
+            server_name localhost;
+            root C:/path/to/your/project/myself;
+            index index.php index.html;
+            
+            location / {
+                try_files $uri $uri/ /index.php?$query_string;
+            }
+            
+            location ~ \.php$ {
+                fastcgi_pass 127.0.0.1:9000;
+                fastcgi_index index.php;
+                fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+                include fastcgi_params;
+            }
+        }
+        ```
+   
+   3. **启动服务器**
+      - 启动Apache或Nginx服务
+   
+   4. **访问项目**
+      - 打开浏览器，输入 `http://localhost/backend/api.php`
+      - 确保后端API可以正常访问
 
 ### 3. 前端安装
 1. **安装依赖**
